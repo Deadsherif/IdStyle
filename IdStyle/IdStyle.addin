@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+	<AddIn Type="Application">
+		<Name>IdStyle</Name>
+		<Assembly>IdStyle/IdStyle.dll</Assembly> // the path at revit directory
+		<FullClassName>IdStyle.App</FullClassName>
+		<ClientId>
+			70665E2A-59B0-4E39-ADC8-6ACEC3B750EF
+		</ClientId>
+		<VendorId>ASE</VendorId>
+		<VendorDescription>Ahmed Sherif Elzagal</VendorDescription>
+	</AddIn>
+
+</RevitAddIns>
