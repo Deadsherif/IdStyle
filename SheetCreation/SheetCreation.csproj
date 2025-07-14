@@ -4,15 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{60ECE2E0-6791-4FF9-9832-D547251DCFB0}</ProjectGuid>
+    <ProjectGuid>{1BE9F938-F05B-4642-AEF9-C185F3BD65C6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IdStyle</RootNamespace>
-    <AssemblyName>IdStyle</AssemblyName>
+    <RootNamespace>SheetCreation</RootNamespace>
+    <AssemblyName>SheetCreation</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>10.0</LangVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,6 +38,15 @@
     <Reference Include="HandyControl, Version=3.5.1.0, Culture=neutral, PublicKeyToken=45be8712787a1e5b, processorArchitecture=MSIL">
       <HintPath>..\packages\HandyControl.3.5.1\lib\net48\HandyControl.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.6, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.9.0.6\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=9.0.0.6, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.9.0.6\lib\net462\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=9.0.0.6, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.9.0.6\lib\net462\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="RevitAPI">
@@ -48,12 +57,20 @@
       <HintPath>..\..\..\..\..\..\Program Files\Autodesk\Revit 2022\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="RevitAutomationToolkit">
+      <HintPath>..\..\RevitAutomationToolKit\RevitAutomationToolkit\bin\Debug\RevitAutomationToolkit.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
     <Reference Include="System.Security" />
-    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -64,55 +81,42 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App.cs" />
-    <Compile Include="Command.cs" />
-    <Compile Include="Command\RelayCommand.cs" />
-    <Compile Include="EVHandler\IdStyleExternalEventHandler.cs" />
-    <Compile Include="MVVM\Converters\BoolToVisibility.cs" />
-    <Compile Include="MVVM\Converters\CountToBoolConverter .cs" />
-    <Compile Include="MVVM\Converters\EnumToStringConverter.cs" />
-    <Compile Include="MVVM\Model\RoomData.cs" />
-    <Compile Include="MVVM\Model\Style.cs" />
-    <Compile Include="MVVM\ViewModel\LoginViewModel.cs" />
-    <Compile Include="MVVM\ViewModel\MainPageViewModel.cs" />
-    <Compile Include="MVVM\ViewModel\RoomSelectionViewModel .cs" />
-    <Compile Include="MVVM\ViewModel\ViewModelBase.cs" />
-    <Compile Include="MVVM\View\LoginPage.xaml.cs">
-      <DependentUpon>LoginPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MVVM\View\MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MVVM\View\MainWindow.xaml.cs">
+    <Compile Include="Application\App.cs" />
+    <Compile Include="Application\Commands\ElevationsCommand.cs" />
+    <Compile Include="Application\Commands\SetupCommand.cs" />
+    <Compile Include="Domain\Enums\ViewOption.cs" />
+    <Compile Include="Domain\Models\ElevationsSettings.cs" />
+    <Compile Include="Application\Tab\PanelBuilder.cs" />
+    <Compile Include="Application\Tab\RibbonBuilder.cs" />
+    <Compile Include="Events\GenerateDrawingHandler.cs" />
+    <Compile Include="Infrastructure\Logger.cs" />
+    <Compile Include="Presentation\Commands\RelayCommand.cs" />
+    <Compile Include="Presentation\Converters\BoolToVisibility.cs" />
+    <Compile Include="Presentation\Converters\CountToBoolConverter .cs" />
+    <Compile Include="Presentation\Converters\EnumToStringConverter.cs" />
+    <Compile Include="Presentation\ViewModels\ItemViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\MainPageViewModel.cs" />
+    <Compile Include="Presentation\ViewModels\ViewModelBase.cs" />
+    <Compile Include="Presentation\Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MVVM\View\PasswordHelper.cs" />
-    <Compile Include="MVVM\View\TextBoxHelper.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Utils\CeilingUtils.cs" />
-    <Compile Include="Utils\ExcelUtils.cs" />
-    <Compile Include="Utils\FloorUtils.cs" />
-    <Compile Include="Utils\RoomUtils.cs" />
-    <Compile Include="Utils\WallUtils.cs" />
+    <Compile Include="Startup.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="IdStyle.addin" />
+    <Folder Include="Application\Queries\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SheetCreation.addin" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="MVVM\View\LoginPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="MVVM\View\MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="MVVM\View\MainWindow.xaml">
+    <Page Include="Presentation\Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -124,25 +128,16 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\SD.png" />
+    <None Include="Resources\elevator.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\favicon-32x32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\favicon-16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\favicon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\favicon1-32x32.png" />
+    <None Include="Resources\setup.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>mkdir "$(AppData)\Autodesk\Revit\Addins\2022\$(ProjectName)\" 2&gt;NUL
 if exist "$(AppData)\Autodesk\Revit\Addins\2022" copy "$(ProjectDir)*.addin" "$(AppData)\Autodesk\REVIT\Addins\2022"
-if exist "$(AppData)\Autodesk\Revit\Addins\2022" copy "$(ProjectDir)$(OutputPath)*.dll" "$(AppData)\Autodesk\REVIT\Addins\2022\$(ProjectName)\"
-		</PostBuildEvent>
+if exist "$(AppData)\Autodesk\Revit\Addins\2022" copy "$(ProjectDir)$(OutputPath)*" "$(AppData)\Autodesk\REVIT\Addins\2022\$(ProjectName)\"
+</PostBuildEvent>
   </PropertyGroup>
 </Project>

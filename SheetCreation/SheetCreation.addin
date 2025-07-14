@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+	<AddIn Type="Application">
+		<Name>SheetCreation</Name>
+		<Assembly>SheetCreation/SheetCreation.dll</Assembly> // the path at revit directory
+		<FullClassName>SheetCreation.App</FullClassName>
+		<ClientId>
+			2255DB8E-47EE-464C-95DF-8B3AEEDC1266
+		</ClientId>
+		<VendorId>ASE</VendorId>
+		<VendorDescription>Ahmed Sherif Elzagal</VendorDescription>
+	</AddIn>
+
+</RevitAddIns>

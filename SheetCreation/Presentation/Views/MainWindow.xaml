@@ -1,0 +1,88 @@
+﻿<Window x:Class="SheetCreation.Presentation.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:SheetCreation.Presentation.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           xmlns:hc="https://handyorg.github.io/handycontrol"
+    Width="250"
+    Height="400"
+    Padding="5"
+
+    Background="#FFE6E6E6"
+    ResizeMode="NoResize"
+    WindowStyle="None"
+   
+    mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
+            <converters:CountToBoolConverter x:Key="CountToBoolConverter"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Margin="5" MouseDown="Grid_MouseDown" >
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="6*" />
+            <RowDefinition Height=".75*" />
+        </Grid.RowDefinitions>
+
+        <ComboBox  VerticalAlignment="Top" Height="50" Grid.Row="0" Margin="5" 
+                  ItemsSource="{Binding TypeList}" 
+                  hc:InfoElement.Placeholder="Please enter the Type" 
+                  hc:InfoElement.Title="Select Elevation Type" Style="{StaticResource ComboBoxExtend.Small}" 
+                  hc:InfoElement.Necessary="True" SelectedItem="{Binding SelectedType}" 
+                  DisplayMemberPath="Name"/>
+
+
+        <Border  Grid.Row="1" CornerRadius="4" >
+
+            <StackPanel>
+                <Label  Content="View Option" Style="{StaticResource BaseStyle}" />
+                <StackPanel HorizontalAlignment="Left" Margin="5,0,0,0" Height="300" Width="250">
+                    <RadioButton Margin="2" HorizontalAlignment="Left"  Content="Current" IsChecked="True"/>
+                    <RadioButton  Margin="2" HorizontalAlignment="Left" Content="All" IsChecked="True"/>
+
+                    <RadioButton Margin="2" HorizontalAlignment="Left"  Content="Select From List" IsChecked="True"/>
+                    <ListBox ItemsSource="{Binding ViewList}" Style="{StaticResource ListBox.Small}" IsEnabled="{Binding listEnabled}" Margin="0,5,0,0" Height="210" Width="150" HorizontalAlignment="Center">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox  Margin="5" IsChecked="False"/>
+                                    <TextBlock Text="{Binding Name}" Margin="5"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                </StackPanel>
+
+            </StackPanel>
+        </Border>
+
+
+        <!--  Buttons  -->
+        <Grid
+            Grid.Row="4"
+            HorizontalAlignment="Right" VerticalAlignment="Bottom">
+
+            <StackPanel Orientation="Horizontal">
+                <Button Content="✅ Save"
+                    Command="{Binding saveCommand}"
+                    Style="{StaticResource ButtonSuccess}" 
+                    Margin="5"/>
+                <Button Content="❌ Close"
+                    Click="CloseBtn_Click"
+                    Style="{StaticResource ButtonWarning}" 
+                    Margin="5"/>
+            </StackPanel>
+        </Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Right">
+            <StackPanel hc:Growl.Token="SuccessMsg" VerticalAlignment="Top" Margin="0,10,10,10"/>
+        </ScrollViewer>
+    </Grid>
+</Window>
