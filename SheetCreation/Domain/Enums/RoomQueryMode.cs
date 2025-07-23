@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace SheetCreation.Domain.Enums
 {
-    enum ViewOption
-    {
-        Current,
-        SelectFromList,
-        All
-    }
+   public enum RoomQueryMode
+   {
+      CurrentView,
+      AllViews,
+      SelectedViews
+   }
 }

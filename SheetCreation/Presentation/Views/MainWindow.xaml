@@ -4,85 +4,481 @@
     xmlns:converters="clr-namespace:SheetCreation.Presentation.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-           xmlns:hc="https://handyorg.github.io/handycontrol"
-    Width="250"
-    Height="400"
-    Padding="5"
-
-    Background="#FFE6E6E6"
-    ResizeMode="NoResize"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    Width="400"
+    Height="740"
+    MinWidth="380"
+    MinHeight="650"
+    Padding="0"
+    Background="Transparent"
+    AllowsTransparency="True"
     WindowStyle="None"
-   
+    ResizeMode="CanResize"
     mc:Ignorable="d">
+
     <Window.Resources>
         <ResourceDictionary>
             <converters:CountToBoolConverter x:Key="CountToBoolConverter"/>
+            <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+
+            <!-- Modern Color Palette -->
+            <SolidColorBrush x:Key="PrimaryBrush" Color="#1E3A8A"/>
+            <SolidColorBrush x:Key="SecondaryBrush" Color="#0D9488"/>
+            <SolidColorBrush x:Key="AccentBrush" Color="#F59E0B"/>
+            <SolidColorBrush x:Key="BackgroundBrush" Color="#F8FAFC"/>
+            <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="TextPrimaryBrush" Color="#1F2937"/>
+            <SolidColorBrush x:Key="TextSecondaryBrush" Color="#6B7280"/>
+            <SolidColorBrush x:Key="BorderBrush" Color="#E5E7EB"/>
+            <SolidColorBrush x:Key="HoverBrush" Color="#F3F4F6"/>
+            <!-- Gradient Brushes -->
+            <LinearGradientBrush x:Key="HeaderGradient" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#1E3A8A" Offset="0"/>
+                <GradientStop Color="#0D9488" Offset="1"/>
+            </LinearGradientBrush>
+
+            <!-- Drop Shadow Effect -->
+            <DropShadowEffect x:Key="CardShadow" 
+                            Color="#000000" 
+                            Opacity="0.1" 
+                            ShadowDepth="2" 
+                            BlurRadius="8"/>
+
+            <DropShadowEffect x:Key="ButtonShadow" 
+                            Color="#000000" 
+                            Opacity="0.15" 
+                            ShadowDepth="1" 
+                            BlurRadius="4"/>
+
+            <!-- Modern Card Style -->
+            <Style x:Key="ModernCard" TargetType="Border">
+                <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
+                <Setter Property="CornerRadius" Value="8"/>
+                <Setter Property="Padding" Value="16"/>
+                <Setter Property="Margin" Value="0,8"/>
+                <Setter Property="Effect" Value="{StaticResource CardShadow}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <DropShadowEffect Color="#000000" Opacity="0.15" ShadowDepth="4" BlurRadius="12"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- Modern Button Style -->
+            <Style x:Key="PrimaryButton" TargetType="Button">
+                <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Padding" Value="20,12"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontWeight" Value="Medium"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Effect" Value="{StaticResource ButtonShadow}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" 
+                                  CornerRadius="6" 
+                                  Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#1E40AF"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="#1D4ED8"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="SecondaryButton" TargetType="Button">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+                <Setter Property="Padding" Value="20,12"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontWeight" Value="Medium"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" 
+                                  CornerRadius="6" 
+                                  Padding="{TemplateBinding Padding}"
+                                  BorderThickness="{TemplateBinding BorderThickness}"
+                                  BorderBrush="{TemplateBinding BorderBrush}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource HoverBrush}"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="#E5E7EB"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Modern ComboBox Style -->
+            <Style x:Key="ModernComboBox" TargetType="ComboBox">
+                <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Padding" Value="12,8"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Height" Value="40"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ComboBox">
+                            <Border Background="{TemplateBinding Background}" 
+                                  BorderBrush="{TemplateBinding BorderBrush}"
+                                  BorderThickness="{TemplateBinding BorderThickness}"
+                                  CornerRadius="6">
+                                <Grid>
+                                    <ToggleButton Name="ToggleButton" 
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                                ClickMode="Press">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="20"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Name="ContentSite"
+                                                            Grid.Column="0"
+                                                            IsHitTestVisible="False"
+                                                            Text="{TemplateBinding SelectionBoxItem}"
+                                                            
+                                                            Margin="{TemplateBinding Padding}"
+                                                            VerticalAlignment="Center"
+                                                            HorizontalAlignment="Left"/>
+                                            <Path Name="Arrow"
+                                                Grid.Column="1"
+                                                Fill="{StaticResource TextSecondaryBrush}"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Data="M 0 0 L 4 4 L 8 0 Z"/>
+                                        </Grid>
+                                    </ToggleButton>
+                                    <Popup Name="Popup"
+                                         Placement="Bottom"
+                                         IsOpen="{TemplateBinding IsDropDownOpen}"
+                                         AllowsTransparency="True"
+                                         Focusable="False"
+                                         PopupAnimation="Slide">
+                                        <Border Background="{StaticResource SurfaceBrush}"
+                                              BorderBrush="{StaticResource BorderBrush}"
+                                              BorderThickness="1"
+                                              CornerRadius="6"
+                                              Effect="{StaticResource CardShadow}">
+                                            <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                                <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                            </ScrollViewer>
+                                        </Border>
+                                    </Popup>
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="BorderBrush" Value="{StaticResource SecondaryBrush}"/>
+                                </Trigger>
+                                <Trigger Property="IsFocused" Value="True">
+                                    <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Modern CheckBox Style -->
+            <Style x:Key="ModernCheckBox" TargetType="CheckBox">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                <Setter Property="Margin" Value="0,4"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="CheckBox">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Name="CheckBoxBorder"
+                                      Width="18" Height="18"
+                                      Background="{StaticResource SurfaceBrush}"
+                                      BorderBrush="{StaticResource BorderBrush}"
+                                      BorderThickness="2"
+                                      CornerRadius="3"
+                                      Margin="0,0,8,0">
+                                    <Path Name="CheckMark"
+                                        Stroke="{StaticResource SurfaceBrush}"
+                                        StrokeThickness="2"
+                                        Data="M 2 6 L 6 10 L 14 2"
+                                        Visibility="Collapsed"/>
+                                </Border>
+                                <ContentPresenter VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="CheckBoxBorder" Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                                    <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                                    <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{StaticResource SecondaryBrush}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Modern RadioButton Style -->
+            <Style x:Key="ModernRadioButton" TargetType="RadioButton">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                <Setter Property="Margin" Value="0,4"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="RadioButton">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Name="RadioBorder"
+                                      Width="18" Height="18"
+                                      Background="{StaticResource SurfaceBrush}"
+                                      BorderBrush="{StaticResource BorderBrush}"
+                                      BorderThickness="2"
+                                      CornerRadius="9"
+                                      Margin="0,0,8,0">
+                                    <Ellipse Name="RadioDot"
+                                           Width="8" Height="8"
+                                           Fill="{StaticResource SurfaceBrush}"
+                                           Visibility="Collapsed"/>
+                                </Border>
+                                <ContentPresenter VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="RadioBorder" Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                                    <Setter TargetName="RadioBorder" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                                    <Setter TargetName="RadioDot" Property="Visibility" Value="Visible"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="RadioBorder" Property="BorderBrush" Value="{StaticResource SecondaryBrush}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Section Header Style -->
+            <Style x:Key="SectionHeader" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                <Setter Property="Margin" Value="0,0,0,12"/>
+            </Style>
+
+            <!-- Label Style -->
+            <Style x:Key="FieldLabel" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="FontWeight" Value="Medium"/>
+                <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+                <Setter Property="Margin" Value="0,0,0,4"/>
+            </Style>
+
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid Margin="5" MouseDown="Grid_MouseDown" >
-        <Grid.RowDefinitions>
 
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="6*" />
-            <RowDefinition Height=".75*" />
-        </Grid.RowDefinitions>
+    <!-- Main Container with Modern Styling -->
+    <Border MouseDown="Grid_MouseDown" Background="{StaticResource BackgroundBrush}" 
+            CornerRadius="12" 
+            Effect="{StaticResource CardShadow}">
+        <Grid  Margin="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <ComboBox  VerticalAlignment="Top" Height="50" Grid.Row="0" Margin="5" 
-                  ItemsSource="{Binding TypeList}" 
-                  hc:InfoElement.Placeholder="Please enter the Type" 
-                  hc:InfoElement.Title="Select Elevation Type" Style="{StaticResource ComboBoxExtend.Small}" 
-                  hc:InfoElement.Necessary="True" SelectedItem="{Binding SelectedType}" 
-                  DisplayMemberPath="Name"/>
+            <!-- Modern Header with Gradient -->
+            <Border Grid.Row="0" 
+                    Background="{StaticResource HeaderGradient}" 
+                    CornerRadius="8" 
+                    Padding="24,20"
+                    Margin="0,0,0,24">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Sheet Creation Tool" 
+                                 Foreground="White" 
+                                 FontSize="24" 
+                                 FontWeight="SemiBold"
+                                 Margin="0,0,0,4"/>
+                        <TextBlock Text="Setting to Create professional sheets" 
+                                 Foreground="#E0E7FF" 
+                                 FontSize="14" 
+                                 FontWeight="Regular"/>
+                    </StackPanel>
 
-        <Border  Grid.Row="1" CornerRadius="4" >
+                    <!-- Close Button -->
+                    <Button Grid.Column="1"
+                            Content="✕"
+                            Background="Transparent"
+                            Foreground="White"
+                            BorderThickness="0"
+                            FontSize="16"
+                            Width="32"
+                            Height="32"
+                            Cursor="Hand"
+                            Click="CloseBtn_Click"
+                            VerticalAlignment="Top">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" 
+                                      CornerRadius="16">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#FFFFFF20"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+            </Border>
 
-            <StackPanel>
-                <Label  Content="View Option" Style="{StaticResource BaseStyle}" />
-                <StackPanel HorizontalAlignment="Left" Margin="5,0,0,0" Height="300" Width="250">
-                    <RadioButton Margin="2" HorizontalAlignment="Left"  Content="Current" IsChecked="True"/>
-                    <RadioButton  Margin="2" HorizontalAlignment="Left" Content="All" IsChecked="True"/>
+            <!-- View Type Selection Card -->
+            <Border Grid.Row="1" Style="{StaticResource ModernCard}">
+                <StackPanel>
+                    <TextBlock Text="General" Style="{StaticResource SectionHeader}"/>
+                    <TextBlock Text="Select the type of view to create" Style="{StaticResource FieldLabel}"/>
+                    <ComboBox ItemsSource="{Binding TypeList}" 
+                            hc:InfoElement.Placeholder="Choose view type..." 
+                            hc:InfoElement.Necessary="True" 
+                            SelectedItem="{Binding SelectedType}" 
+                            DisplayMemberPath="Name"
+                            
+                           />
+                    <CheckBox Content="Add Room Number To Elevation Name" Margin="0,20,0,0" 
+        IsChecked="{Binding IsRoomNumberAdded}"
+        Style="{StaticResource ModernCheckBox}"/>
+                </StackPanel>
+            </Border>
 
-                    <RadioButton Margin="2" HorizontalAlignment="Left"  Content="Select From List" IsChecked="True"/>
-                    <ListBox ItemsSource="{Binding ViewList}" Style="{StaticResource ListBox.Small}" IsEnabled="{Binding listEnabled}" Margin="0,5,0,0" Height="210" Width="150" HorizontalAlignment="Center">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <CheckBox  Margin="5" IsChecked="False"/>
-                                    <TextBlock Text="{Binding Name}" Margin="5"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+            <!-- Plan Types Card -->
+            <Border Grid.Row="2" Style="{StaticResource ModernCard}">
+                <StackPanel>
+                    <TextBlock Text="Plan Types" Style="{StaticResource SectionHeader}"/>
+                    <TextBlock Text="Choose which types of plans to create" Style="{StaticResource FieldLabel}"/>
+
+                    <!-- Floor Plans Section -->
+                    <StackPanel Margin="0,8,0,16">
+                        <CheckBox Content="Create Floor Plans" 
+                                IsChecked="{Binding IsFloorPlanCreationChecked}"
+                                Style="{StaticResource ModernCheckBox}"/>
+
+                        <!-- Floor Plan Template Selection -->
+
+                    </StackPanel>
+
 
                 </StackPanel>
+            </Border>
 
-            </StackPanel>
-        </Border>
+            <!-- View Selection Card -->
+            <Border Grid.Row="3" Style="{StaticResource ModernCard}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
+                    <TextBlock Grid.Row="0" Text="View Selection" Style="{StaticResource SectionHeader}"/>
+                    <TextBlock Grid.Row="1" Text="Choose which views to include" Style="{StaticResource FieldLabel}" Margin="0,0,0,12"/>
 
-        <!--  Buttons  -->
-        <Grid
-            Grid.Row="4"
-            HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                    <StackPanel Grid.Row="2">
+                        <RadioButton GroupName="ViewOptions" 
+                                   Content="Current View" 
+                                   IsChecked="{Binding UseCurrentView}"
+                                   Style="{StaticResource ModernRadioButton}"/>
+                        <RadioButton GroupName="ViewOptions" 
+                                   Content="All Views" 
+                                   IsChecked="{Binding UseAllViews}"
+                                   Style="{StaticResource ModernRadioButton}"/>
+                        <RadioButton GroupName="ViewOptions" 
+                                   Content="Select From List" 
+                                   IsChecked="{Binding SelectFromList}"
+                                   Style="{StaticResource ModernRadioButton}"/>
 
-            <StackPanel Orientation="Horizontal">
-                <Button Content="✅ Save"
-                    Command="{Binding saveCommand}"
-                    Style="{StaticResource ButtonSuccess}" 
-                    Margin="5"/>
-                <Button Content="❌ Close"
-                    Click="CloseBtn_Click"
-                    Style="{StaticResource ButtonWarning}" 
-                    Margin="5"/>
-            </StackPanel>
+                        <Popup  IsOpen="{Binding SelectFromList}" Placement="Bottom"  >
+                            <Border Margin="0,0,0,0" 
+                                 BorderThickness="1" 
+                                 BorderBrush="{StaticResource BorderBrush}" 
+                                 CornerRadius="6"
+                                 Background="{StaticResource SurfaceBrush}"
+                                 MaxHeight="250"
+                                 Width="200" >
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8" >
+                                    <ItemsControl ItemsSource="{Binding ViewList}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <CheckBox Content="{Binding Name}" 
+                                  IsChecked="{Binding IsSelected}"
+                                  Style="{StaticResource ModernCheckBox}"
+                                  Margin="4,2"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Action Buttons -->
+            <Border Grid.Row="5" 
+                  Margin="0,16,0,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Cancel" 
+                          Click="CloseBtn_Click"
+                          Style="{StaticResource SecondaryButton}" 
+                          Width="100"
+                          Margin="0,0,12,0"/>
+                    <Button Content="Save" 
+                          Command="{Binding SaveCommand}"
+                          Style="{StaticResource PrimaryButton}" 
+                          Width="120"/>
+                </StackPanel>
+            </Border>
         </Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Right">
-            <StackPanel hc:Growl.Token="SuccessMsg" VerticalAlignment="Top" Margin="0,10,10,10"/>
-        </ScrollViewer>
-    </Grid>
+    </Border>
 </Window>
+

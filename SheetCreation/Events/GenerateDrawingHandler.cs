@@ -17,7 +17,7 @@ namespace SheetCreation.Events
                 var doc = uidoc.Document;
                 var activeView = doc.ActiveView;
                 var projectName = doc.Title;
-                MainViewModel.SetStatus(true);
+               
                 Transaction tr = new Transaction(doc, "Create Component");
                 tr.Start();
 

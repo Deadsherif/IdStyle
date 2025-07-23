@@ -84,7 +84,7 @@
     <Compile Include="Application\App.cs" />
     <Compile Include="Application\Commands\ElevationsCommand.cs" />
     <Compile Include="Application\Commands\SetupCommand.cs" />
-    <Compile Include="Domain\Enums\ViewOption.cs" />
+    <Compile Include="Domain\Enums\RoomQueryMode.cs" />
     <Compile Include="Domain\Models\ElevationsSettings.cs" />
     <Compile Include="Application\Tab\PanelBuilder.cs" />
     <Compile Include="Application\Tab\RibbonBuilder.cs" />
@@ -105,6 +105,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -112,6 +117,11 @@
     <Folder Include="Application\Queries\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="SheetCreation.addin" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -119,6 +129,10 @@
     <Page Include="Presentation\Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\Views\ModernUIResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -133,11 +147,30 @@
   <ItemGroup>
     <None Include="Resources\setup.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Icons\Generator32.png" />
+    <Content Include="Icons\Generator16.png" />
+    <Content Include="Icons\Settings16.png" />
+    <Content Include="Icons\Settings32.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>mkdir "$(AppData)\Autodesk\Revit\Addins\2022\$(ProjectName)\" 2&gt;NUL
-if exist "$(AppData)\Autodesk\Revit\Addins\2022" copy "$(ProjectDir)*.addin" "$(AppData)\Autodesk\REVIT\Addins\2022"
-if exist "$(AppData)\Autodesk\Revit\Addins\2022" copy "$(ProjectDir)$(OutputPath)*" "$(AppData)\Autodesk\REVIT\Addins\2022\$(ProjectName)\"
+    <PostBuildEvent>REM Ensure target project folder exists
+mkdir "$(AppData)\Autodesk\Revit\Addins\2022\$(ProjectName)\" 2&gt;NUL
+
+REM Copy the .addin file
+if exist "$(AppData)\Autodesk\Revit\Addins\2022" (
+    copy "$(ProjectDir)*.addin" "$(AppData)\Autodesk\Revit\Addins\2022"
+    copy "$(ProjectDir)$(OutputPath)*" "$(AppData)\Autodesk\Revit\Addins\2022\$(ProjectName)\"
+)
+
+REM Check if the Icons folder exists in the output location, if not, create it
+if not exist "$(AppData)\Autodesk\Revit\Addins\2022\$(ProjectName)\Icons" (
+    mkdir "$(AppData)\Autodesk\Revit\Addins\2022\$(ProjectName)\Icons"
+)
+
+REM Copy the contents of the Icons folder from project to output
+xcopy /E /Y /I "$(ProjectDir)Icons" "$(AppData)\Autodesk\Revit\Addins\2022\$(ProjectName)\Icons\"
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

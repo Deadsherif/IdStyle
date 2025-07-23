@@ -3,6 +3,7 @@ using SheetCreation.Application.Tab;
 
 using System;
 using System.IO;
+using System.Reflection;
 
 namespace SheetCreation
 {
@@ -10,14 +11,17 @@ namespace SheetCreation
     {
         public Result OnStartup(UIControlledApplication application)
         {
-            AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
+         var assemblyLocation = Assembly.GetExecutingAssembly().Location;
+         var pathFolder = Path.GetDirectoryName(assemblyLocation);
+         AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
 
             var builder = new RibbonBuilder(application, "Interior");
 
             builder.AddPanel("Elevations")
-                   .AddPushButton("Generate", "Generate", "SheetCreation.Application.Commands.ElevationsCommand", Properties.Resources.elevator);
+                   .AddPushButton("Generate", "Generate", "SheetCreation.Application.Commands.ElevationsCommand", $"{pathFolder}/Icons/Generator32.png", $"{pathFolder}/Icons/Generator16.png");
             builder.AddPanel("Elevations")
-                   .AddPushButton("Setup", "Setup", "SheetCreation.Application.Commands.SetupCommand", Properties.Resources.setup);
+                   .AddPushButton("Setup", "Setup", "SheetCreation.Application.Commands.SetupCommand", $"{pathFolder}/Icons/Settings32.png", $"{pathFolder}/Icons/Settings16.png");
+         Properties.Settings.Default.Reload();
             return Result.Succeeded;
         }
 

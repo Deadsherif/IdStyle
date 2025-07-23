@@ -29,18 +29,23 @@ namespace SheetCreation.Application.Tab
             return app.CreateRibbonPanel(tabName, panelName);
         }
 
-        public PanelBuilder AddPushButton(string name, string text, string commandNamespace, Image icon)
+        public PanelBuilder AddPushButton(string name, string text, string commandNamespace, string iconPath32, string iconPath16)
         {
             string assemblyPath = Assembly.GetExecutingAssembly().Location;
             var data = new PushButtonData(name, text, assemblyPath, commandNamespace);
             var button = _panel.AddItem(data) as PushButton;
 
-            if (button != null)
-            {
-                var imageSource = ConvertToImageSource(icon);
-                button.Image = imageSource;
-                button.LargeImage = imageSource;
-            }
+
+               var image32 = Image.FromFile(iconPath32);// Load image from path
+               var image16 = Image.FromFile(iconPath16);// Load image from path
+
+               var imageSource32 = ConvertToImageSource(image32); // Convert to BitmapSource
+               var imageSource16 = ConvertToImageSource(image16); // Convert to BitmapSource
+
+         button.LargeImage = imageSource32;
+               button.Image = imageSource16;
+            
+         
 
             return this;
         }
