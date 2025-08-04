@@ -63,9 +63,9 @@ namespace SheetCreation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap elevator {
+        internal static System.Drawing.Bitmap generation_icon {
             get {
-                object obj = ResourceManager.GetObject("elevator", resourceCulture);
+                object obj = ResourceManager.GetObject("generation_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,9 +73,29 @@ namespace SheetCreation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap setup {
+        internal static System.Drawing.Bitmap generation_icon__1_ {
             get {
-                object obj = ResourceManager.GetObject("setup", resourceCulture);
+                object obj = ResourceManager.GetObject("generation_icon__1_", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap setup_icon {
+            get {
+                object obj = ResourceManager.GetObject("setup_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap setup_icon__1_ {
+            get {
+                object obj = ResourceManager.GetObject("setup_icon__1_", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

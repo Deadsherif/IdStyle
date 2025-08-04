@@ -195,7 +195,7 @@ namespace SheetCreation.Application.Commands
                List<ViewSection> views = new List<ViewSection>();
                string roomName = room.LookupParameter("Name").AsString();
                string roomNumber = Properties.Settings.Default.IsRoomNumberAdded ? room.LookupParameter("Number").AsString() : "";
-              
+
                for (int i = 00; i < 04; i++)
                {
                   ViewSection elevation = marker.CreateElevation(doc, view.Id, i);
@@ -203,13 +203,13 @@ namespace SheetCreation.Application.Commands
                   elevation.Name = $"{roomName}{roomNumber} Elevation 0{i + 1}";
                   EditElevationBoundary(doc, elevation, room, point);
                   views.Add(elevation);
-              
+
                }
                if (roomName.Contains("TOILET") || roomName.Contains("SHOWER"))
-               { 
+               {
 
                   roomName = "TOILETAndSHOWER";
-                  if (_roomElevations.FirstOrDefault(X=>X.Key== roomName).Key == null)
+                  if (_roomElevations.FirstOrDefault(X => X.Key == roomName).Key == null)
                      _roomElevations[roomName] = views;
                   else
                      _roomElevations[roomName].AddRange(views);
@@ -264,7 +264,7 @@ namespace SheetCreation.Application.Commands
              .Cast<Room>()
              .ToList();
       }
-      public static Element FindElementByName(Document doc,Type targetType, string targetName)
+      public static Element FindElementByName(Document doc, Type targetType, string targetName)
       {
          return new FilteredElementCollector(doc)
            .OfClass(targetType)
@@ -352,8 +352,13 @@ namespace SheetCreation.Application.Commands
                if (floorPlan == null)
                {
                   floorPlan = doc.GetElement(viewPlan.Duplicate(ViewDuplicateOption.Duplicate)) as View;
-                  var viewName = name.Split('-').LastOrDefault()??"";
+                  var viewName = name.Split('-').LastOrDefault() ?? "";
                   floorPlan.Name = viewName;
+                  floorPlan.Scale = viewPlan.Scale;
+                  var scopeBoxId = viewPlan.get_Parameter(BuiltInParameter.VIEWER_VOLUME_OF_INTEREST_CROP).AsElementId();
+                  if (scopeBoxId != null)
+                     floorPlan.get_Parameter(BuiltInParameter.VIEWER_VOLUME_OF_INTEREST_CROP).Set(scopeBoxId);
+                  floorPlan.ViewTemplateId = viewPlan.ViewTemplateId;
                }
                CreateViewportsInPlansSheets(doc, sheet, floorPlan);
             }
@@ -388,43 +393,51 @@ namespace SheetCreation.Application.Commands
              .OfClass(typeof(View))
              .Cast<View>()
              .Where(v => v.IsTemplate)
-             .ToDictionary(v => v.Name.ToUpper(), v => v);
+             .ToDictionary(v => v.Name.Replace(" ", "").ToUpper(), v => v);
 
          // Get all regular (non-template) views
-         var allViews = new FilteredElementCollector(doc)
-             .OfClass(typeof(View))
+         var viewPlans = new FilteredElementCollector(doc)
+             .OfClass(typeof(ViewPlan))
              .Cast<View>()
              .Where(v => !v.IsTemplate)
              .ToList();
-
+            var elevations = new FilteredElementCollector(doc)
+          .OfClass(typeof(View))
+          .Cast<View>().Where(x=>x.ViewType==ViewType.Elevation)
+          .Where(v => !v.IsTemplate)
+          .ToList();
          using (Transaction tx = new Transaction(doc, "Assign View Templates by Name"))
          {
             tx.Start();
 
-            foreach (var view in allViews)
+            foreach (var view in elevations)
             {
                string viewName = view.Name.ToUpper();
                if (view.ViewType == ViewType.Elevation)
                {
 
-                  string templateName = $"BUJ_INT-ELEVATIONS_1/25".ToUpper();
-
-                  if (templateMap.TryGetValue(templateName, out View template))
+                  string templateName = $"UBJ_ELEVATIONS_1/25".ToUpper();
+                  var template = templateMap.FirstOrDefault(k => k.Key.Contains(templateName)).Value;
+                  if (template != null)
                   {
                      view.ViewTemplateId = template.Id;
                   }
 
-                  break; // Stop checking other keywords once matched
+                  continue; // Stop checking other keywords once matched
 
                }
-
+            }
+            foreach (var view in viewPlans)
+            {
+               string viewName = view.Name.ToUpper();
                foreach (var keyword in _keywords)
                {
                   if (viewName.Contains(keyword.ToUpper()))
                   {
-                     string templateName = $"BUJ_{keyword}_1/25".ToUpper();
+                     string templateName = $"UBJ_{keyword}_1/25".ToUpper().Replace(" ", "");
 
-                     if (templateMap.TryGetValue(templateName, out View template))
+                     var template = templateMap.FirstOrDefault(k => k.Key.Contains(templateName)).Value;
+                     if (template != null)
                      {
                         view.ViewTemplateId = template.Id;
                      }
@@ -519,6 +532,6 @@ namespace SheetCreation.Application.Commands
          Viewport.Create(doc, sheet.Id, view.Id, location);
       }
 
-  
+
    }
 }

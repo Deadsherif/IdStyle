@@ -16,11 +16,10 @@ namespace SheetCreation
          AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
 
             var builder = new RibbonBuilder(application, "Interior");
-
             builder.AddPanel("Elevations")
-                   .AddPushButton("Generate", "Generate", "SheetCreation.Application.Commands.ElevationsCommand", $"{pathFolder}/Icons/Generator32.png", $"{pathFolder}/Icons/Generator16.png");
+                   .AddPushButton("Generate", "Generate", "SheetCreation.Application.Commands.ElevationsCommand", Properties.Resources.generation_icon__1_);
             builder.AddPanel("Elevations")
-                   .AddPushButton("Setup", "Setup", "SheetCreation.Application.Commands.SetupCommand", $"{pathFolder}/Icons/Settings32.png", $"{pathFolder}/Icons/Settings16.png");
+                   .AddPushButton("Setup", "Setup", "SheetCreation.Application.Commands.SetupCommand", Properties.Resources.setup_icon__1_);
          Properties.Settings.Default.Reload();
             return Result.Succeeded;
         }

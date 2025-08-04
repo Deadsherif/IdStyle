@@ -142,16 +142,12 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\elevator.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\setup.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Icons\Generator32.png" />
-    <Content Include="Icons\Generator16.png" />
-    <Content Include="Icons\Settings16.png" />
-    <Content Include="Icons\Settings32.png" />
+    <Content Include="Icons\development.png" />
+    <Content Include="Icons\setting.png" />
+    <None Include="Resources\generation_icon %281%29.png" />
+    <None Include="Resources\setup_icon %281%29.png" />
+    <None Include="Resources\generation_icon.png" />
+    <None Include="Resources\setup_icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
